@@ -1,0 +1,21 @@
+.activity-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-cell {
+  min-height: 80px;
+}
+
+.activity-item {
+  font-size: 0.75rem; /* text-xs */
+  line-height: 1rem; /* text-xs */
+  padding: 2px 4px; /* px-1 py-0.5 */
+  border-radius: 0.375rem; /* rounded-md */
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

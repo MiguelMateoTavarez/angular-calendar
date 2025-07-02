@@ -1,0 +1,53 @@
+<div class="p-4 bg-white rounded-lg shadow-md">
+  <div class="flex items-center justify-between mb-4">
+    <button (click)="prevPeriod()" class="px-3 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+      &lt;
+    </button>
+    <h2 class="text-xl font-semibold text-gray-800">{{ getMonthYear() }}</h2>
+    <button (click)="nextPeriod()" class="px-3 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+      &gt;
+    </button>
+  </div>
+
+  <div class="flex justify-center mb-4 space-x-2">
+    <button (click)="setMonthView()" [ngClass]="{'bg-blue-500 text-white': currentView === 'month', 'bg-gray-200 text-gray-800': currentView !== 'month'}" class="px-4 py-2 rounded-md">Month</button>
+    <button (click)="setWeekView()" [ngClass]="{'bg-blue-500 text-white': currentView === 'week', 'bg-gray-200 text-gray-800': currentView !== 'week'}" class="px-4 py-2 rounded-md">Week</button>
+    <button (click)="setDayView()" [ngClass]="{'bg-blue-500 text-white': currentView === 'day', 'bg-gray-200 text-gray-800': currentView !== 'day'}" class="px-4 py-2 rounded-md">Day</button>
+  </div>
+
+  @if (currentView === 'month' || currentView === 'week') {
+    <div class="grid grid-cols-7 gap-2 text-center text-sm font-medium text-gray-600 mb-2">
+      @for (day of weekDays; track day) {
+        <div>{{ day }}</div>
+      }
+    </div>
+  }
+
+  <div [ngClass]="{'grid-cols-7': currentView === 'month' || currentView === 'week', 'grid-cols-1': currentView === 'day'}" class="grid gap-2">
+    @for (day of daysInMonth; track day.date) {
+      <div class="p-2 rounded-lg flex flex-col items-center justify-center"
+           [ngClass]="{
+             'bg-gray-100 text-gray-400': day.isDummy,
+             'bg-blue-50 text-blue-800 font-semibold': day.date.toDateString() === currentMonth.toDateString() && !day.isDummy,
+             'bg-white text-gray-700': !day.isDummy && day.date.toDateString() !== currentMonth.toDateString()
+           }">
+        @if (!day.isDummy) {
+          <span class="text-lg">{{ day.date.getDate() }}</span>
+          <div class="mt-1 text-xs space-y-1 w-full">
+            @for (activity of getActivitiesForDay(day.date); track activity.title) {
+              <div class="px-1 py-0.5 rounded-md text-white text-center truncate"
+                   [ngClass]="{
+                     'bg-green-500': activity.activity_type === 'call',
+                     'bg-purple-500': activity.activity_type === 'visit',
+                     'bg-orange-500': activity.activity_type === 'e-mail'
+                   }"
+                   [title]="activity.title">
+                {{ activity.title }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
